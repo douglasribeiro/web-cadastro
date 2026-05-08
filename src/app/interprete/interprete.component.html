@@ -1,0 +1,124 @@
+<div class="content-wrapper">
+  <!-- HEADER COM BUSCA -->
+  <header class="page-header">
+    <div class="header-left">
+      <h2>🎵 Cadastro de Intérpretes</h2>
+      <div class="search-box" *ngIf="view() === 'LISTA'">
+        <span class="search-icon">🔍</span>
+        <input type="text" [ngModel]="termoBusca()" (ngModelChange)="filtrar($event)"
+          placeholder="Buscar intérprete ou artista...">
+      </div>
+    </div>
+    <button *ngIf="view() === 'LISTA'" class="btn-main" (click)="novo()">+ Novo Intérprete</button>
+  </header>
+
+  @if (view() === 'LISTA') {
+    <!-- TABELA DE INTÉRPRETES -->
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>nome</th>
+          <th>genero</th>
+          <th>origem</th>
+          <th>desde</th>
+          <th>sobre</th>
+          <th style="text-align: center;">Ações</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (m of itensPaginados(); track m.id) {
+        <tr>
+          <td><b>{{ m.nome }}</b></td>
+          <td>{{ m.genero }}</td>
+          <td>{{ m.origem }}</td>
+          <td>{{ m.desde }}</td>
+          <td class="coluna-longa" [title]="m.sobre">{{ m.sobre }}</td>
+          <td style="text-align: center; display: flex; justify-content: center; gap: 8px;">
+            <button class="btn-outline" (click)="editar(m)">Editar</button>
+            <button class="btn-danger-sm" (click)="prepararExclusao(m)">Excluir</button>
+          </td>
+        </tr>
+        } @empty {
+        <tr>
+          <td colspan="5" style="text-align: center; padding: 40px; color: #999;">Nenhuma Intérprete encontrado.</td>
+        </tr>
+        }
+      </tbody>
+    </table>
+
+    <!-- BARRA DE PAGINAÇÃO -->
+    <div class="pagination">
+      <div class="page-size-selector">
+        <span>Mostrar</span>
+        <select [ngModel]="itensPorPagina()" (ngModelChange)="mudarLimite($event)">
+          <option [value]="5">5</option>
+          <option [value]="10">10</option>
+        </select>
+        <span>por página</span>
+      </div>
+      <span class="page-info">Página <b>{{ paginaAtual() }}</b> de {{ totalPaginas() }}</span>
+      <div class="pagination-controls">
+        <button class="btn-pag" [disabled]="paginaAtual() === 1" (click)="mudarPagina(-1)">← Anterior</button>
+        <button class="btn-pag" [disabled]="paginaAtual() === totalPaginas()" (click)="mudarPagina(1)">Próxima →</button>
+      </div>
+    </div>
+  } @else {
+  <div class="form-box">
+    <div class="form-grid">
+
+      <!-- Coluna 1: Título -->
+      <div class="form-group">
+        <label>Nome</label>
+        <input [(ngModel)]="itemSelecionado.nome" placeholder="Ex: Frank Zappa">
+      </div>
+
+      <!-- Coluna 2: Artista (Interprete) - SELECT CUSTOM -->
+      <div class="form-group">
+        <label>Origem</label>
+        <input type="text" [(ngModel)]="itemSelecionado.origem">
+      </div>
+
+      <!-- Coluna 1: Álbum -->
+      <div class="form-group">
+        <label>Genero</label>
+        <input [(ngModel)]="itemSelecionado.genero" placeholder="Ex: Rock/Pop">
+      </div>
+
+      <!-- Coluna 2: Gravadora -->
+      <div class="form-group">
+        <label>Desde</label>
+        <input [(ngModel)]="itemSelecionado.desde" placeholder="Ex: 1980">
+      </div>
+
+      <mat-form-field class="full-width">
+        <mat-label>Sobre o Intérprete</mat-label>
+        <textarea matInput cdkTextareaAutosize #autosize="cdkTextareaAutosize" cdkAutosizeMinRows="3"
+          cdkAutosizeMaxRows="10" [(ngModel)]="itemSelecionado.sobre" placeholder="Descreva a história do artista...">
+        </textarea>
+      </mat-form-field>
+
+    </div>
+  </div>
+
+  <div class="form-btns">
+    <button class="btn-save" (click)="salvar()">Gravar Intérprete</button>
+    <!--<button class="btn-cancel" (click)="view.set('LISTA')">Cancelar</button>-->
+    <button class="btn-cancel" (click)="cancelar()">Cancelar</button>
+  </div>
+  }
+</div>
+
+<!-- MODAL DE SUCESSO CUSTOMIZADO -->
+@if (showModalSucesso()) {
+<div class="modal-overlay">
+  <div class="modal-card">
+    <div class="modal-icon success">✅</div>
+    <h3>Música Salva!</h3>
+    <p>As informações da música foram processadas e armazenadas com sucesso no sistema.</p>
+
+    <div class="modal-btns">
+      <button class="btn-success-modal" (click)="fecharSucesso()">Entendido</button>
+    </div>
+  </div>
+</div>
+}

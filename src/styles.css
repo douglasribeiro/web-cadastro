@@ -1,0 +1,26 @@
+/* You can add global styles to this file, and also import other style files */
+:root {
+  --sidebar-bg: #2c3e50;
+  --sidebar-hover: #34495e;
+  --accent: #3498db;
+  --bg-light: #f5f6fa;
+  --text-dark: #333;
+  --white: #ffffff;
+}
+
+body, html { margin: 0; padding: 0; height: 100%; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+
+/* Estilos de Botão Padronizados */
+.btn-main { background: var(--sidebar-bg); color: white; border: none; padding: 10px 20px; border-radius: 4px; cursor: pointer; transition: 0.3s; }
+.btn-main:hover { background: var(--sidebar-hover); }
+
+.btn-outline { border: 1px solid var(--accent); color: var(--accent); background: none; padding: 5px 10px; cursor: pointer; border-radius: 4px; }
+.btn-outline:hover { background: var(--accent); color: white; }
+
+/* Tabelas Padronizadas */
+.data-table { width: 100%; border-collapse: collapse; background: white; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
+.data-table th { background: #f8f9fa; padding: 12px; text-align: left; border-bottom: 2px solid #eee; color: #666; }
+.data-table td { padding: 12px; border-bottom: 1px solid #eee; }
+
+html, body { height: 100%; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }

@@ -1,0 +1,274 @@
+<div class="content-wrapper">
+  <!-- HEADER COM BUSCA -->
+  <header class="page-header">
+    <div class="header-left">
+      <h2>🎵 Cadastro de Músicas</h2>
+      <div class="search-box" *ngIf="view() === 'LISTA'">
+        <span class="search-icon">🔍</span>
+        <input type="text" [ngModel]="termoBusca()" (ngModelChange)="filtrar($event)"
+          placeholder="Buscar música ou artista...">
+      </div>
+    </div>
+    <button *ngIf="view() === 'LISTA'" class="btn-main" (click)="novo()">+ Nova Música</button>
+  </header>
+
+  @if (situacao() === 'INCLUSÃO') {
+  <div class="upload-container full-width">
+    <div class="upload-card">
+      <div class="upload-icon">📁</div>
+      <div class="upload-info">
+        <span class="upload-title">Importar Música via MP3</span>
+        <span class="upload-subtitle">O sistema preencherá o título e a duração para você</span>
+      </div>
+      <label for="file-upload" class="btn-upload-custom">
+        Selecionar Arquivo
+      </label>
+      <input id="file-upload" type="file" accept="audio/mpeg" (change)="aoSelecionarArquivo($event)" />
+    </div>
+  </div>
+  }
+
+  @if (view() === 'LISTA') {
+  <!-- TABELA DE MÚSICAS -->
+  <table class="data-table">
+    <thead>
+      <tr>
+        <th>Título</th>
+        <th>Artista</th>
+        <th>Álbum</th>
+        <th>Ano</th>
+        <th style="text-align: center;">Ações</th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (m of itensPaginados(); track m.id) {
+      <tr>
+        <td><b>{{ m.nome }}</b></td>
+        <td>{{ m.interprete.nome }}</td>
+        <td>{{ m.album }}</td>
+        <td>{{ m.lancamento }}</td>
+        <td style="text-align: center; display: flex; justify-content: center; gap: 8px;">
+          <button class="btn-outline" (click)="editar(m)">Editar</button>
+          <button class="btn-danger-sm" (click)="prepararExclusao(m)">Excluir</button>
+        </td>
+      </tr>
+      } @empty {
+      <tr>
+        <td colspan="5" style="text-align: center; padding: 40px; color: #999;">Nenhuma música encontrada.</td>
+      </tr>
+      }
+    </tbody>
+  </table>
+
+  <!-- BARRA DE PAGINAÇÃO
+  <div class="pagination">
+    <div class="page-size-selector">
+      <span>Mostrar</span>
+      <select [ngModel]="itensPorPagina()" (ngModelChange)="mudarLimite($event)">
+        <option [value]="5">5</option>
+        <option [value]="10">10</option>
+      </select>
+      <span>por página</span>
+    </div>
+    <span class="page-info">Página <b>{{ paginaAtual() }}</b> de {{ totalPaginas() }}</span>
+
+    <div class="pagination-controls">
+      <button class="btn-pag" [disabled]="paginaAtual() === 1" (click)="mudarPagina(-1)">← Anterior</button>
+      <button class="btn-pag" [disabled]="paginaAtual() === totalPaginas()" (click)="mudarPagina(1)">Próxima →</button>
+    </div>
+  </div>-->
+
+  <div class="pagination">
+  <div class="page-size-selector">
+    <span>Mostrar</span>
+    <select [ngModel]="itensPorPagina()" (ngModelChange)="mudarLimite($event)">
+      <option [value]="5">5</option>
+      <option [value]="10">10</option>
+    </select>
+    <span>por página</span>
+  </div>
+
+  <span class="page-info">
+    Página <b>{{ paginaAtual() }}</b> de {{ totalPaginas() }}
+  </span>
+
+  <div class="pagination-controls">
+    <!-- Botão Primeira Página -->
+    <button class="btn-pag" [disabled]="paginaAtual() === 1" (click)="irParaPagina(1)">«</button>
+
+    <!-- Botão Anterior (passa -1 como delta) -->
+    <button class="btn-pag" [disabled]="paginaAtual() === 1" (click)="mudarPagina(-1)">← Anterior</button>
+
+    <!-- Botão Próxima (passa 1 como delta) -->
+    <button class="btn-pag" [disabled]="paginaAtual() === totalPaginas()" (click)="mudarPagina(1)">Próxima →</button>
+
+    <!-- Botão Última Página -->
+    <button class="btn-pag" [disabled]="paginaAtual() === totalPaginas()" (click)="irParaPagina(totalPaginas())">»</button>
+  </div>
+</div>
+
+  } @else {
+  <div class="form-box">
+    <div class="form-grid">
+
+      <!-- Coluna 1: Título -->
+      <div class="form-group">
+        <label>Título da Música (nome)</label>
+        <input [(ngModel)]="itemSelecionado.nome" placeholder="Ex: Bohemian Rhapsody">
+      </div>
+
+      <!-- Coluna 2: Artista (Interprete) - SELECT CUSTOM -->
+      <div class="form-group">
+        <label>Artista / Interprete</label>
+        <input type="text" [(ngModel)]="itemSelecionado.interprete.nome" list="artistas-list">
+        <datalist id="artistas-list">
+          @for (artista of listaInterprete(); track artista.id) {
+            <option [value]="artista.nome"></option>
+          }
+        </datalist>
+      </div>
+
+      <!-- Coluna 1: Álbum -->
+      <div class="form-group">
+        <label>Álbum</label>
+        <input [(ngModel)]="itemSelecionado.album" placeholder="Ex: A Night at the Opera">
+      </div>
+
+      <!-- Coluna 2: Gravadora -->
+      <div class="form-group">
+        <label>Gravadora</label>
+        <input type="text" [(ngModel)]="itemSelecionado.gravadora.nome" list="gravadora-list" placeholder="Ex: EMI">
+        <datalist id="gravadora-list">
+          @for (gravadora of listagravadora(); track gravadora.id) {
+            <option [value]="gravadora.nome"></option>
+          }
+        </datalist>
+      </div>
+
+      <!-- Coluna 1: Lançamento -->
+      <div class="form-group">
+        <label>Data de Lançamento</label>
+        <input [(ngModel)]="itemSelecionado.lancamento">
+      </div>
+
+      <!-- Coluna 2: Gênero -->
+      <div class="form-group">
+        <label>Gênero</label>
+        <input [(ngModel)]="itemSelecionado.genero.nome" list="genero-list" placeholder="Ex: Rock">
+        <datalist id="genero-list">
+          @for (genero of listaGenero(); track genero.id) {
+            <option [value]="genero.nome"></option>
+          }
+        </datalist>
+      </div>
+
+      <!-- Coluna 1: Compositor -->
+      <div class="form-group">
+        <label>Compositor</label>
+        <input [(ngModel)]="itemSelecionado.compositor">
+      </div>
+
+      <!-- Coluna 2: Intervalo (Segundos) -->
+      <div class="form-group">
+        <label>Intervalo de execução (Horas)</label>
+        <input type="number" [(ngModel)]="itemSelecionado.intervalo">
+      </div>
+
+      <!-- Coluna 1: Duração -->
+      <div class="form-group">
+        <label>Duração (Segundos)</label>
+        <input type="number" [(ngModel)]="itemSelecionado.duracaoSegundos">
+      </div>
+
+      <!-- Coluna 2: Introdução -->
+      <div class="form-group">
+        <label>Introdução (Segundos)</label>
+        <input type="number" [(ngModel)]="itemSelecionado.introducao">
+      </div>
+
+      <!-- Coluna 2: Localização do arquivo -->
+      <div class="form-group-local">
+        <label>Local do arquivo</label>
+        <input [(ngModel)]="itemSelecionado.caminhoArquivo" >
+      </div>
+
+    </div>
+
+    @if (itemSelecionado.capa) {
+    <div class="form-group" style="text-align: center;">
+      <label>Capa Identificada</label>
+      <img [src]="itemSelecionado.capa"
+        style="width: 120px; height: 120px; border-radius: 8px; object-fit: cover; border: 1px solid #ddd;">
+    </div>
+    }
+
+    <div class="form-btns">
+      <button class="btn-save" (click)="salvar()">Gravar Música</button>
+      <!--<button class="btn-cancel" (click)="view.set('LISTA')">Cancelar</button>-->
+      <button class="btn-cancel" (click)="cancelar()">Cancelar</button>
+    </div>
+  </div>
+  }
+</div>
+
+<!-- MODAL DE EXCLUSÃO PERSONALIZADO -->
+@if (showModalExcluir()) {
+<div class="modal-overlay">
+  <div class="modal-card">
+    <div class="modal-icon">🗑️</div>
+    <h3>Remover Música?</h3>
+    <p>Deseja mesmo excluir <b>{{ itemParaExcluir()?.nome }}</b> de <b>{{ itemParaExcluir()?.interprete.nome }}</b>?</p>
+    <div class="modal-btns">
+      <button class="btn-confirm" (click)="confirmarExclusao()">Sim, Remover</button>
+      <button class="btn-cancel-modal" (click)="fecharModal()">Manter Música</button>
+    </div>
+  </div>
+</div>
+}
+
+<!-- MODAL DE SUCESSO CUSTOMIZADO -->
+@if (showModalSucesso()) {
+<div class="modal-overlay">
+  <div class="modal-card">
+    <div class="modal-icon success">✅</div>
+    <h3>Música Salva!</h3>
+    <p>As informações da música foram processadas e armazenadas com sucesso no sistema.</p>
+
+    <div class="modal-btns">
+      <button class="btn-success-modal" (click)="fecharSucesso()">Entendido</button>
+    </div>
+  </div>
+</div>
+}
+
+@if (showModalStd()) {
+  <div class="modal-overlay">
+    <div class="modal-card">
+      <div class="modal-icon error">❌</div>
+      <h3>{{ mensagemHeadStd() }}</h3>
+
+       <!--Exibe a mensagem que veio do Java-->
+      <p>{{ mensagemStd() }}</p>
+
+      <div class="modal-btns">
+        <button class="btn-error-modal" (click)="fecharStd()">Entendido</button>
+      </div>
+    </div>
+  </div>
+}
+
+@if (showModalErro()) {
+  <div class="modal-overlay">
+    <div class="modal-card">
+      <div class="modal-icon error">❌</div>
+      <h3>Erro no Servidor</h3>
+
+      <!-- O estilo pre-line faz o <p> respeitar as quebras de linha do Java -->
+      <p style="white-space: pre-line;">{{ mensagemErro() }}</p>
+
+      <div class="modal-btns">
+        <button class="btn-error-modal" (click)="fecharErro()">Entendido</button>
+      </div>
+    </div>
+  </div>
+}
