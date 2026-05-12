@@ -109,88 +109,101 @@
 
   } @else {
   <div class="form-box">
+      <form #musicaForm="ngForm" class="form-box">
     <div class="form-grid">
 
       <!-- Coluna 1: Título -->
       <div class="form-group">
         <label>Título da Música (nome)</label>
-        <input [(ngModel)]="itemSelecionado.nome" placeholder="Ex: Bohemian Rhapsody">
+        <input name="nome" #nomeInput="ngModel" [(ngModel)]="itemSelecionado.nome" required placeholder="Ex: Bohemian Rhapsody">
+
+        @if (nomeInput.invalid && nomeInput.touched) { <span class="error-msg"></span>}
+
       </div>
 
       <!-- Coluna 2: Artista (Interprete) - SELECT CUSTOM -->
       <div class="form-group">
         <label>Artista / Interprete</label>
-        <input type="text" [(ngModel)]="itemSelecionado.interprete.nome" list="artistas-list">
+        <input type="text" name="interprete" #interpreteInput="ngModel" [(ngModel)]="itemSelecionado.interprete!.nome" required list="artistas-list">
         <datalist id="artistas-list">
           @for (artista of listaInterprete(); track artista.id) {
             <option [value]="artista.nome"></option>
           }
         </datalist>
+        @if (interpreteInput.invalid && interpreteInput.touched) { <span class="error-msg"></span>}
+
       </div>
 
       <!-- Coluna 1: Álbum -->
       <div class="form-group">
         <label>Álbum</label>
-        <input [(ngModel)]="itemSelecionado.album" placeholder="Ex: A Night at the Opera">
+        <input [(ngModel)]="itemSelecionado.album"  #albumInput="ngModel" name="album" required placeholder="Ex: A Night at the Opera">
+
+        @if (albumInput.invalid && albumInput.touched) { <span class="error-msg"></span>}
       </div>
 
       <!-- Coluna 2: Gravadora -->
       <div class="form-group">
         <label>Gravadora</label>
-        <input type="text" [(ngModel)]="itemSelecionado.gravadora.nome" list="gravadora-list" placeholder="Ex: EMI">
+        <input type="text" [(ngModel)]="itemSelecionado.gravadora.nome" #gravadoraInput="ngModel" required name="gravadora" list="gravadora-list" placeholder="Ex: EMI">
         <datalist id="gravadora-list">
           @for (gravadora of listagravadora(); track gravadora.id) {
             <option [value]="gravadora.nome"></option>
           }
         </datalist>
+        @if (gravadoraInput.invalid && gravadoraInput.touched) { <span class="error-msg"></span>}
       </div>
 
       <!-- Coluna 1: Lançamento -->
       <div class="form-group">
         <label>Data de Lançamento</label>
-        <input [(ngModel)]="itemSelecionado.lancamento">
+        <input [(ngModel)]="itemSelecionado.lancamento" name="lancamento" #lancamentoInput="ngModel" required>
+         @if (lancamentoInput.invalid && lancamentoInput.touched) { <span class="error-msg"></span>}
       </div>
 
       <!-- Coluna 2: Gênero -->
       <div class="form-group">
         <label>Gênero</label>
-        <input [(ngModel)]="itemSelecionado.genero.nome" list="genero-list" placeholder="Ex: Rock">
+        <input [(ngModel)]="itemSelecionado.genero.nome" name="genero" #generoInput="ngModel" required list="genero-list" placeholder="Ex: Rock">
         <datalist id="genero-list">
           @for (genero of listaGenero(); track genero.id) {
             <option [value]="genero.nome"></option>
           }
         </datalist>
+         @if (generoInput.invalid && generoInput.touched) { <span class="error-msg"></span>}
       </div>
 
       <!-- Coluna 1: Compositor -->
       <div class="form-group">
         <label>Compositor</label>
-        <input [(ngModel)]="itemSelecionado.compositor">
+        <input [(ngModel)]="itemSelecionado.compositor" name="compositor">
       </div>
 
       <!-- Coluna 2: Intervalo (Segundos) -->
       <div class="form-group">
         <label>Intervalo de execução (Horas)</label>
-        <input type="number" [(ngModel)]="itemSelecionado.intervalo">
+        <input type="number" [(ngModel)]="itemSelecionado.intervalo" name="intervalo" #intervaloInput="ngModel" required>
+         @if (intervaloInput.invalid && intervaloInput.touched) { <span class="error-msg"></span>}
       </div>
 
       <!-- Coluna 1: Duração -->
       <div class="form-group">
         <label>Duração (Segundos)</label>
-        <input type="number" [(ngModel)]="itemSelecionado.duracaoSegundos">
+        <input type="number" [(ngModel)]="itemSelecionado.duracaoSegundos" name="tempo">
       </div>
 
       <!-- Coluna 2: Introdução -->
       <div class="form-group">
         <label>Introdução (Segundos)</label>
-        <input type="number" [(ngModel)]="itemSelecionado.introducao">
+        <input type="number" [(ngModel)]="itemSelecionado.introducao" name="intro">
       </div>
 
       <!-- Coluna 2: Localização do arquivo -->
       <div class="form-group-local">
         <label>Local do arquivo</label>
-        <input [(ngModel)]="itemSelecionado.caminhoArquivo" >
+        <input [(ngModel)]="itemSelecionado.caminhoArquivo" name="caminho">
       </div>
+
 
     </div>
 
@@ -203,10 +216,10 @@
     }
 
     <div class="form-btns">
-      <button class="btn-save" (click)="salvar()">Gravar Música</button>
-      <!--<button class="btn-cancel" (click)="view.set('LISTA')">Cancelar</button>-->
+      <button class="btn-save" (click)="salvar()" [disabled]="musicaForm.form.status === 'INVALID'">Gravar Música</button>
       <button class="btn-cancel" (click)="cancelar()">Cancelar</button>
     </div>
+    </form>
   </div>
   }
 </div>

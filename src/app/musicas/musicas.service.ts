@@ -26,8 +26,8 @@ export class MusicasService {
       lancamento: novaMusica.lancamento,
       compositor: novaMusica.compositor,
       intervalo: novaMusica.intervalo,
-      duracaoSegundos: novaMusica.duracaoSegundos.toString(),
-      introducao: novaMusica.introducao.toString(),
+      duracaoSegundos: novaMusica.duracaoSegundos,
+      introducao: novaMusica.introducao,
       genero: novaMusica.genero.nome,
       caminhoArquivo: novaMusica.caminhoArquivo,
       ArquivoUrl: novaMusica.ArquivoUrl

@@ -837,3 +837,27 @@
   display: block !important;
   min-height: 20px;
 }
+
+
+/* Estilo para o input inválido APÓS o usuário interagir com ele (touched) */
+/* Isso evita que o formulário já comece todo vermelho ao carregar */
+input.ng-invalid.ng-touched {
+  border: 1px solid #ff4d4d !important;
+  background-color: #fff8f8;
+}
+
+/* Opcional: Uma pequena mensagem de erro abaixo do campo */
+.error-msg {
+  color: #ff4d4d;
+  font-size: 12px;
+  margin-top: 4px;
+  display: block;
+}
+
+.btn-save:disabled {
+  background-color: #cccccc !important;
+  color: #666666 !important;
+  cursor: not-allowed;
+  opacity: 0.8;
+  border: none;
+}

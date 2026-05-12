@@ -1,7 +1,7 @@
 import { ErrorInterceptor } from './../errorInterceptor';
 import { Component, signal, computed, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
+import { FormBuilder, FormGroup, FormsModule, Validators } from '@angular/forms';
 import { MusicasService } from './musicas.service';
 import { Musica } from './musica';
 import { HTTP_INTERCEPTORS, HttpErrorResponse } from '@angular/common/http';
@@ -28,10 +28,10 @@ export interface ApiResponse<T> {
   ],
 })
 export class MusicasComponent implements OnInit {
-  private musicaService = inject(MusicasService);
-  private interpreteService = inject(InterpreteService);
-  private gravadoraService = inject(GravadoraService);
-  private generoService = inject(GeneroService);
+  private readonly musicaService = inject(MusicasService);
+  private readonly interpreteService = inject(InterpreteService);
+  private readonly gravadoraService = inject(GravadoraService);
+  private readonly generoService = inject(GeneroService);
   view = signal<'LISTA' | 'EDICAO'>('LISTA');
   situacao = signal<'INCLUSÃO' | 'ALTERAÇÃO' | 'NEUTRO'>('NEUTRO');
   nomeArquivoSelecionado = signal<string | null>(null);
@@ -49,18 +49,41 @@ export class MusicasComponent implements OnInit {
   mensagemStd = signal('');
   mensagemHeadStd = signal('');
   itemParaExcluir = signal<Musica | null>(null);
-  itemSelecionado: Partial<Musica> = {};
+  itemSelecionado: Partial<Musica> = {interprete: {
+    id: 0,
+    nome: '',
+    genero: '',
+    origem: '',
+    desde: '',
+    sobre: ''
+  }, gravadora:{
+    id: 0,
+    nome: ''
+  },genero:{
+    id: 0,
+    nome: ''
+  }
+};
   compMusica = MusicasComponent;
   listaInterprete = signal<{ id: number; nome: string }[]>([]);
   listagravadora = signal<{ id: number; nome: string }[]>([]);
   listaGenero = signal<{ id: number; nome: string }[]>([]);
   keycloak: any;
+  meuForm: FormGroup;
+
 
   async ngOnInit(): Promise<void> {
     this.carregarInterprete();
     this.carregaGravadora();
     this.carregaGenero();
     this.carregarMusicas();
+  }
+
+  constructor(private fb: FormBuilder){
+    this.meuForm = this.fb.group({
+      nome: ['',Validators.required]
+    })
+
   }
 
   carregarInterprete() {

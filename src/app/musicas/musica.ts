@@ -37,8 +37,8 @@ export interface MusicaRequest {
 	lancamento: string; // edit, list
 	compositor: string;
 	intervalo: number; // edit
-	duracaoSegundos: string; // edit
-	introducao: string; // edit
+	duracaoSegundos: bigint; // edit
+	introducao: bigint; // edit
 	genero: string; // edit
 	caminhoArquivo: string;
 	ArquivoUrl: string;
