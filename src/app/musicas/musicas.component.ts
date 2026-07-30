@@ -4,7 +4,7 @@ import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, FormsModule, Validators } from '@angular/forms';
 import { MusicasService } from './musicas.service';
 import { Musica } from './musica';
-import { HTTP_INTERCEPTORS, HttpErrorResponse } from '@angular/common/http';
+import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { InterpreteService } from '../interprete/interprete.service';
 import { GravadoraService } from '../gravadora/gravadora.service';
 import { GeneroService } from '../genero/genero.service';
@@ -186,6 +186,7 @@ export class MusicasComponent implements OnInit {
         },
         error: (err) => {
           let msgFinal = 'Erro desconhecido no servidor.';
+          console.log(err);
           const corpo = err.error;
 
           if (corpo) {
@@ -198,7 +199,7 @@ export class MusicasComponent implements OnInit {
                 corpo.message || (typeof corpo === 'string' ? corpo : msgFinal);
             }
           }
-          if (corpo.errors && Array.isArray(corpo.errors)) {
+          if ( corpo.errors && Array.isArray(corpo.errors)) {
             corpo.errors.forEach((msg, i) => {
               console.log(`Erro ${i + 1}:`, msg);
             });
@@ -398,7 +399,7 @@ export class MusicasComponent implements OnInit {
 
         // Define valores padrão para campos numéricos se estiverem vazios
         this.itemSelecionado.intervalo = 0;
-        this.itemSelecionado.introducao = 0n;
+        this.itemSelecionado.introducao = 0;
 
         // 3. Extração da Capa (Conversão para Base64)
         if (tags.picture) {

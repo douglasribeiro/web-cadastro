@@ -1,0 +1,169 @@
+<div class="content-wrapper">
+  <!-- HEADER COM BUSCA -->
+  <header class="page-header">
+    <div class="header-left">
+      <h2>🎵 Cadastro de Bancos</h2>
+      <div class="search-box" *ngIf="view() === 'LISTA'">
+        <span class="search-icon">🔍</span>
+        <input type="text" [ngModel]="termoBusca()" (ngModelChange)="filtrar($event)"
+          placeholder="Buscar Banco...">
+      </div>
+    </div>
+    <button *ngIf="view() === 'LISTA'" class="btn-main" (click)="novo()">+ Novo Banco</button>
+  </header>
+
+  @if (view() === 'LISTA') {
+    <!-- TABELA DE INTÉRPRETES -->
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>nome</th>
+          <th>limite</th>
+          <th>data abertura</th>
+          <th>agência</th>
+          <th>conta</th>
+          <th>gerente</th>
+          <th>endereço</th>
+          <th>telefone</th>
+          <th style="text-align: center;">Ações</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (m of itensPaginados(); track m.id) {
+        <tr>
+          <td><b>{{ m.nome }}</b></td>
+          <td>{{ m.limite | currency: 'BRL'}}</td>
+          <td>{{ m.dtAbertura }}</td>
+          <td>{{ m.nuAgencia }}</td>
+          <td>{{ m.nuConta }}</td>
+          <td>{{ m.noGerente }}</td>
+          <td>{{ m.endereco }}</td>
+          <td>{{ m.telefone }}</td>
+          <td style="text-align: center; display: flex; justify-content: center; gap: 8px;">
+            <button class="btn-outline" (click)="editar(m)">Editar</button>
+            <button class="btn-danger-sm" (click)="prepararExclusao(m)">Excluir</button>
+          </td>
+        </tr>
+        } @empty {
+        <tr>
+          <td colspan="5" style="text-align: center; padding: 40px; color: #999;">Nenhuma Banco encontrado.</td>
+        </tr>
+        }
+      </tbody>
+    </table>
+
+    <!-- BARRA DE PAGINAÇÃO -->
+    <div class="pagination">
+      <div class="page-size-selector">
+        <span>Mostrar</span>
+        <select [ngModel]="itensPorPagina()" (ngModelChange)="mudarLimite($event)">
+          <option [value]="5">5</option>
+          <option [value]="10">10</option>
+        </select>
+        <span>por página</span>
+      </div>
+      <span class="page-info">Página <b>{{ paginaAtual() }}</b> de {{ totalPaginas() }}</span>
+      <div class="pagination-controls">
+        <button class="btn-pag" [disabled]="paginaAtual() === 1" (click)="mudarPagina(-1)">← Anterior</button>
+        <button class="btn-pag" [disabled]="paginaAtual() === totalPaginas()" (click)="mudarPagina(1)">Próxima →</button>
+      </div>
+    </div>
+  } @else {
+  <div class="form-box">
+    <div class="form-grid">
+
+      <div class="form-group">
+        <label for="nome">Nome</label>
+        <input [(ngModel)]="itemSelecionado.nome" id="nome" placeholder="Ex: Bank Boston">
+      </div>
+
+      <div class="form-group">
+        <label for="limite">Limite</label>
+        <input [(ngModel)]="itemSelecionado.limite" id="limite">
+      </div>
+
+      <div class="form-group">
+        <label for="dtAbertura">Data Abertura</label>
+        <input [(ngModel)]="itemSelecionado.dtAbertura" id="dtAbertura">
+      </div>
+
+      <div class="form-group">
+        <label for="agencia">Agência</label>
+        <input [(ngModel)]="itemSelecionado.nuAgencia" id="agencia">
+      </div>
+
+      <div class="form-group">
+        <label for="conta">Conta</label>
+        <input [(ngModel)]="itemSelecionado.nuConta" id="conta">
+      </div>
+
+      <div class="form-group">
+        <label for="gerente">Gerente</label>
+        <input [(ngModel)]="itemSelecionado.noGerente" id="gerente">
+      </div>
+
+      <div class="form-group">
+        <label for="endereco">Endereço</label>
+        <input [(ngModel)]="itemSelecionado.endereco" id="endereco">
+      </div>
+
+      <div class="form-group">
+        <label for="telefone">Telefone</label>
+        <input [(ngModel)]="itemSelecionado.telefone" id="telefone">
+      </div>
+    </div>
+  </div>
+
+  <div class="form-btns">
+    <button class="btn-save" (click)="salvar()">Gravar Banco</button>
+    <button class="btn-cancel" (click)="view.set('LISTA')">Cancelar</button>
+    <!--<button class="btn-cancel" (click)="cancelar()">Cancelar</button>-->
+  </div>
+  }
+</div>
+
+<!-- MODAL DE SUCESSO CUSTOMIZADO -->
+@if (showModalSucesso()) {
+<div class="modal-overlay">
+  <div class="modal-card">
+    <div class="modal-icon success">✅</div>
+    <h3>Banco Salvo!</h3>
+    <p>As informações do banco foram processadas e armazenadas com sucesso no sistema.</p>
+
+    <div class="modal-btns">
+      <button class="btn-success-modal" (click)="fecharSucesso()">Entendido</button>
+    </div>
+  </div>
+</div>
+}
+
+<!-- MODAL DE EXCLUSÃO PERSONALIZADO -->
+@if (showModalExcluir()) {
+<div class="modal-overlay">
+  <div class="modal-card">
+    <div class="modal-icon">🗑️</div>
+    <h3>Remover Banco?</h3>
+    <p>Deseja mesmo excluir <b>{{ itemParaExcluir()?.nome }}</b></p>
+    <div class="modal-btns">
+      <button class="btn-confirm" (click)="confirmarExclusao()">Sim, Remover</button>
+      <button class="btn-cancel-modal" (click)="fecharModal()">Manter Música</button>
+    </div>
+  </div>
+</div>
+}
+
+@if (showModalStd()) {
+  <div class="modal-overlay">
+    <div class="modal-card">
+      <div class="modal-icon error">❌</div>
+      <h3>{{ mensagemHeadStd() }}</h3>
+
+       <!--Exibe a mensagem que veio do Java-->
+      <p>{{ mensagemStd() }}</p>
+
+      <div class="modal-btns">
+        <button class="btn-error-modal" (click)="fecharStd()">Entendido</button>
+      </div>
+    </div>
+  </div>
+}

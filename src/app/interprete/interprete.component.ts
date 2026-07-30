@@ -46,7 +46,7 @@ export class InterpreteComponent implements OnInit {
         this.carregando.set(false);
       },
       error: (err) => {
-        console.error('Erro ao listar intérprete:', err);
+        console.error('Erro ao listar Bancos', err);
         this.carregando.set(false);
       },
     });

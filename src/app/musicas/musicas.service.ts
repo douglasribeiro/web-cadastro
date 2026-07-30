@@ -41,8 +41,8 @@ export class MusicasService {
   alterarMusica(upMusica: Musica){
     const payload = {
       ...upMusica,
-      duracaoSegundos: upMusica.duracaoSegundos.toString(),
-      introducao: upMusica.introducao.toString(),
+      duracaoSegundos: upMusica.duracaoSegundos,
+      introducao: upMusica.introducao,
     };
     console.log(payload);
     return this.http.patch<Musica>(this.apiUrl+'/'+payload.id, payload).pipe(

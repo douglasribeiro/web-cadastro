@@ -10,7 +10,7 @@ export interface Musica {
 	compositor: string;
 	intervalo: number; // edit
 	duracaoSegundos: bigint; // edit
-	introducao: bigint; // edit
+	introducao: number; // edit
 	genero: Genero; // edit
 	caminhoArquivo: string;
 	ArquivoUrl: string;
@@ -38,7 +38,7 @@ export interface MusicaRequest {
 	compositor: string;
 	intervalo: number; // edit
 	duracaoSegundos: bigint; // edit
-	introducao: bigint; // edit
+	introducao: number; // edit
 	genero: string; // edit
 	caminhoArquivo: string;
 	ArquivoUrl: string;

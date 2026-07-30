@@ -1,11 +1,10 @@
-import { ApplicationConfig, provideZoneChangeDetection } from "@angular/core";
-import { provideClientHydration, withEventReplay } from "@angular/platform-browser";
-import { provideAnimations } from "@angular/platform-browser/animations";
-import { provideRouter, withEnabledBlockingInitialNavigation } from "@angular/router";
-import { routes } from "./app.routes";
+import { ApplicationConfig, LOCALE_ID } from "@angular/core";
 import { HTTP_INTERCEPTORS, provideHttpClient, withInterceptorsFromDi } from "@angular/common/http";
 import { APP_INITIALIZER } from '@angular/core';
 import { KeycloakBearerInterceptor, KeycloakService } from 'keycloak-angular';
+import { registerLocaleData } from '@angular/common';
+import localePt from '@angular/common/locales/pt';
+
 
 function initializeKeycloak(keycloak: KeycloakService) {
   return () =>
@@ -39,7 +38,11 @@ function initializeKeycloak(keycloak: KeycloakService) {
 });
 }
 
+//registerLocaleData(registerLocaleData, 'pt-BR');
+registerLocaleData(localePt, 'pt-BR');
 export const appConfig: ApplicationConfig = {
+
+
   providers: [
     provideHttpClient(
       withInterceptorsFromDi()
@@ -56,7 +59,8 @@ export const appConfig: ApplicationConfig = {
       provide: HTTP_INTERCEPTORS,
       useClass: KeycloakBearerInterceptor,
       multi: true
-    }
+    },
+    { provide: LOCALE_ID, useValue: 'pt-BR' }
 ]
 };
 /*

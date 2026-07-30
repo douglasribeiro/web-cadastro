@@ -861,3 +861,23 @@ input.ng-invalid.ng-touched {
   opacity: 0.8;
   border: none;
 }
+
+.icon {
+  width: 18px;
+  height: 18px;
+  margin-right: 12px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.sub-icon {
+  width: 16px;
+  height: 16px;
+  opacity: 0.8; /* Deixa os ícones do submenu sutilmente mais discretos */
+}
+
+.arrow lucide-icon {
+  width: 14px;
+  height: 14px;
+}
