@@ -2,14 +2,14 @@
   <!-- HEADER COM BUSCA -->
   <header class="page-header">
     <div class="header-left">
-      <h2>🎵 Cadastro de Bancos</h2>
+      <h2>🎵 Cadastro de Cartões Credito</h2>
       <div class="search-box" *ngIf="view() === 'LISTA'">
         <span class="search-icon">🔍</span>
         <input type="text" [ngModel]="termoBusca()" (ngModelChange)="filtrar($event)"
-          placeholder="Buscar Banco...">
+          placeholder="Buscar Cartão...">
       </div>
     </div>
-    <button *ngIf="view() === 'LISTA'" class="btn-main" (click)="novo()">+ Novo Banco</button>
+    <button *ngIf="view() === 'LISTA'" class="btn-main" (click)="novo()">+ Novo Cartão</button>
   </header>
 
   @if (view() === 'LISTA') {
@@ -18,13 +18,13 @@
       <thead>
         <tr>
           <th>id</th>
-          <th>codigo banco</th>
-          <th>nome conta</th>
-          <th>agência</th>
-          <th>numero conta</th>
-          <th>tipo</th>
-          <th>saldo</th>
+          <th>banco</th>
+          <th>nome cartão</th>
+          <th>bandeira</th>
           <th>limite</th>
+          <th>disponivel</th>
+          <th>dia fechamento</th>
+          <th>dia vencimento</th>
           <th style="text-align: center;">Ações</th>
         </tr>
       </thead>
@@ -32,13 +32,13 @@
         @for (m of itensPaginados(); track m.id) {
         <tr>
           <td><b>{{ m.id }}</b></td>
-          <td>{{ m.bancoCodigo }}</td>
-          <td>{{ m.nomeConta }}</td>
-          <td>{{ m.agencia }}</td>
-          <td>{{ m.numeroConta }}</td>
-          <td>{{ m.tipoConta }}</td>
-          <td>{{ m.saldoAtual  | currency: 'BRL' }}</td>
-          <td>{{ m.limite| currency: 'BRL' }}</td>
+          <td>{{ m.contaBancaria.nomeConta }}</td>
+          <td>{{ m.nomeCartao }}</td>
+          <td>{{ m.bandeira }}</td>
+          <td>{{ m.limiteTotal | currency: 'BRL' }}</td>
+          <td>{{ m.limiteDisponivel| currency: 'BRL' }}</td>
+          <td>{{ m.diaFechamento }}</td>
+          <td>{{ m.diaVencimento }}</td>
           <td style="text-align: center; display: flex; justify-content: center; gap: 8px;">
             <button class="btn-outline" (click)="editar(m)">Editar</button>
             <button class="btn-danger-sm" (click)="prepararExclusao(m)">Excluir</button>
@@ -78,45 +78,54 @@
       </div>
 
       <div class="form-group">
-        <label for="limite">Cod. Banco</label>
-        <input [(ngModel)]="itemSelecionado.bancoCodigo" id="limite">
+        <label for="banco">Banco</label>
+        <!-- Adicionado o [compareWith] para garantir a seleção na edição -->
+        <select [(ngModel)]="itemSelecionado.contaBancaria"
+                [compareWith]="compararBancos"
+                id="banco"
+                class="form-control">
+          <option value="" disabled selected>Selecione um banco</option>
+          <option *ngFor="let banco of bancos()" [ngValue]="banco">
+            {{ banco.nomeConta }}
+          </option>
+        </select>
       </div>
 
       <div class="form-group">
-        <label for="dtAbertura">Agência</label>
-        <input [(ngModel)]="itemSelecionado.agencia" id="dtAbertura">
+        <label for="dtAbertura">Nome Cartão</label>
+        <input [(ngModel)]="itemSelecionado.nomeCartao" id="dtAbertura" class="form-control">
       </div>
 
       <div class="form-group">
-        <label for="agencia">Num. Conta</label>
-        <input [(ngModel)]="itemSelecionado.numeroConta" id="agencia">
+        <label for="agencia">Bandeira</label>
+        <input [(ngModel)]="itemSelecionado.bandeira" id="agencia">
       </div>
 
       <div class="form-group">
-        <label for="conta">Nome Conta</label>
-        <input [(ngModel)]="itemSelecionado.nomeConta" id="conta">
+        <label for="conta">Limite Total</label>
+        <input [(ngModel)]="itemSelecionado.limiteTotal" id="conta">
       </div>
 
       <div class="form-group">
-        <label for="gerente">Tipo Conta</label>
-        <input [(ngModel)]="itemSelecionado.tipoConta" id="gerente">
+        <label for="gerente">Limite Disponivel</label>
+        <input [(ngModel)]="itemSelecionado.limiteDisponivel" id="gerente">
       </div>
 
       <div class="form-group">
-        <label for="endereco">Saldo</label>
-        <input [(ngModel)]="itemSelecionado.saldoAtual" id="endereco">
+        <label for="endereco">Dia Fechamento</label>
+        <input [(ngModel)]="itemSelecionado.diaFechamento" id="endereco">
       </div>
 
       <div class="form-group">
-        <label for="limite">Limite</label>
-        <input [(ngModel)]="itemSelecionado.limite" id="limite">
+        <label for="limite">Dia Vencimento</label>
+        <input [(ngModel)]="itemSelecionado.diaVencimento" id="limite">
       </div>
 
     </div>
   </div>
 
   <div class="form-btns">
-    <button class="btn-save" (click)="salvar()">Gravar Banco</button>
+    <button class="btn-save" (click)="salvar()">Gravar Cartão</button>
     <button class="btn-cancel" (click)="view.set('LISTA')">Cancelar</button>
     <!--<button class="btn-cancel" (click)="cancelar()">Cancelar</button>-->
   </div>
@@ -128,8 +137,8 @@
 <div class="modal-overlay">
   <div class="modal-card">
     <div class="modal-icon success">✅</div>
-    <h3>Banco Salvo!</h3>
-    <p>As informações do banco foram processadas e armazenadas com sucesso no sistema.</p>
+    <h3>Cartão de Credito Salvo!</h3>
+    <p>As informações do cartão de credito foram processadas e armazenadas com sucesso no sistema.</p>
 
     <div class="modal-btns">
       <button class="btn-success-modal" (click)="fecharSucesso()">Entendido</button>
@@ -143,28 +152,12 @@
 <div class="modal-overlay">
   <div class="modal-card">
     <div class="modal-icon">🗑️</div>
-    <h3>Remover Banco?</h3>
-    <p>Deseja mesmo excluir <b>{{ itemParaExcluir()?.nomeConta }}</b></p>
+    <h3>Remover Cartão de Crediro?</h3>
+    <p>Deseja mesmo excluir <b>{{ itemParaExcluir()?.nomeCartao }}</b></p>
     <div class="modal-btns">
       <button class="btn-confirm" (click)="confirmarExclusao()">Sim, Remover</button>
       <button class="btn-cancel-modal" (click)="fecharModal()">Manter Música</button>
     </div>
   </div>
 </div>
-}
-
-@if (showModalStd()) {
-  <div class="modal-overlay">
-    <div class="modal-card">
-      <div class="modal-icon error">❌</div>
-      <h3>{{ mensagemHeadStd() }}</h3>
-
-       <!--Exibe a mensagem que veio do Java-->
-      <p>{{ mensagemStd() }}</p>
-
-      <div class="modal-btns">
-        <button class="btn-error-modal" (click)="fecharStd()">Entendido</button>
-      </div>
-    </div>
-  </div>
 }

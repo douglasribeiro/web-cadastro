@@ -1,4 +1,4 @@
-import { BancoService } from './../banco.service';
+import { BancoService } from './banco.service';
 import { CommonModule } from '@angular/common';
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { Component, computed, inject, OnInit, signal } from '@angular/core';
@@ -48,8 +48,9 @@ export class BancoComponent implements OnInit {
   carregarLista(): void {
     this.bancoService.getList().subscribe({
       next: (dados: any) => {
-        console.log(dados);
+        console.log(dados.data);
         this.bancos.set(dados.data);
+        console.log(this.bancos[0]);
         this.carregando.set(false);
       },
       error: (err) => {
@@ -67,15 +68,14 @@ export class BancoComponent implements OnInit {
   novo() {
     this.itemSelecionado = {
       id: 0,
-      nome: '',
-      saldo: 0,
-	    limite: 0,
-      dtAbertura: null,
-	    nuAgencia: '',
-      nuConta: '',
-      noGerente: '',
-      endereco: '',
-      telefone: ''
+      empresa: null,
+      bancoCodigo: '',
+      nomeConta: '',
+      agencia: '',
+      numeroConta: '',
+      tipoConta: null,
+      saldoAtual: 0,
+      limite: 0,
     }
     this.view.set('EDICAO');
     this.situacao.set('INCLUSÃO');
@@ -88,7 +88,7 @@ export class BancoComponent implements OnInit {
 
   listaFiltrada = computed(() => {
     const busca = this.termoBusca().toLowerCase();
-    return this.bancos().filter((m) => m.nome.toLowerCase().includes(busca));
+    return this.bancos().filter((m) => m.nomeConta.toLowerCase().includes(busca));
   });
 
   editar(reg: Banco) {

@@ -1,27 +1,24 @@
 export class Banco {
   id: number;
-	nome: string;
-  saldo: number;
-	limite: number;
-  dtAbertura: Date;
-	nuAgencia: string;
-  nuConta: string;
-  noGerente: string;
-  endereco: string;
-  telefone: string;
-	movimentacoes: Movimentacao[] = [];
+  empresa: Empresa;
+  bancoCodigo: string;
+  nomeConta: string;
+  agencia: string;
+  numeroConta: string;
+  tipoConta: TipoContaBancaria;
+  saldoAtual: number;
+  limite: number;
 }
 
-export class Movimentacao {
+export class Empresa {
   id: number;
-  banco: Banco;
-  descricao: string;
-  valor: number;
-  saldo: number;
-  movimento: Movimento;
+  razaoSocial: string;
+  nomeFantasia: string;
+  cnpj: string;
 }
 
-export enum Movimento {
-  DEBITO = '1',
-  CREDITO = '2'
+export enum TipoContaBancaria {
+  CORRENTE = '1',
+  POUPANCA = '2',
+  INVESTIMENTO = '3'
 }

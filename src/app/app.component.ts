@@ -20,10 +20,13 @@ import {
   CreditCard,
   BanknoteArrowDown,
   Banknote,
-  ShoppingCart
+  ShoppingCart,
+  BanknoteArrowUp
 } from 'lucide-angular';
 import { InterpreteComponent } from './interprete/interprete.component';
 import { BancoComponent } from './financeiro/banco/banco.component';
+import { CartaoCreditoComponent } from './financeiro/cartao-credito/cartao-credito.component';
+import { PlanoContasComponent } from './financeiro/plano-contas/plano-contas.component';
 
 interface SubMenuItem {
   id: string;
@@ -121,7 +124,6 @@ export class AppComponent implements OnInit {
         { id: 'prod', label: 'Produtos', icon: Package, component: ProdutosComponent },
         { id: 'cli', label: 'Clientes', icon: Users, component: ClientesComponent },
         { id: 'ban', label: 'Bancos', icon: Banknote, component: BancoComponent },
-        { id: 'cartao', label: 'Cartão', icon: CreditCard, component: MusicasComponent },
       ]
     },
     {
@@ -140,7 +142,9 @@ export class AppComponent implements OnInit {
       subItems: [
         { id: 'pagar', label: 'Pagar', icon: BanknoteArrowDown, component: InterpreteComponent }, // Ícone de Microfone
         { id: 'compra', label: 'Compra', icon: ShoppingCart, component: InterpreteComponent }, // Ícone de Microfone
-        { id: 'receber', label: 'Receber', icon: PaymentResponse, component: MusicasComponent }
+        { id: 'receber', label: 'Receber', icon: BanknoteArrowUp, component: MusicasComponent },
+        { id: 'cartao', label: 'Cartão Credito', icon: CreditCard, component: CartaoCreditoComponent },
+        { id: 'planoContas', label: 'Plano Contas', icon: CreditCard, component: PlanoContasComponent}
       ]
     }
   ];

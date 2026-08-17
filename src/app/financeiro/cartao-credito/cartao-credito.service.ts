@@ -1,37 +1,37 @@
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { catchError, Observable, throwError } from 'rxjs';
-import { Banco } from './banco/banco';
+import { CartaoCredito } from './cartao-credito';
 
 @Injectable({
   providedIn: 'root'
 })
-export class BancoService {
+export class CartaoCreditoService {
 
-  private apiUrl = 'http://localhost:8081/api/banco';
+  private apiUrl = 'http://localhost:8081/api/cc';
 
   constructor(private readonly http: HttpClient) { }
 
-  getList(): Observable<Banco[]> {
-    return this.http.get<Banco[]>(this.apiUrl);
+  getList(): Observable<CartaoCredito[]> {
+    return this.http.get<CartaoCredito[]>(this.apiUrl);
   }
 
-  salvarBanco(novoBanco: Banco): Observable<Banco> {
-      novoBanco.id  = null;
+  salvarCartao(novoCartao: CartaoCredito): Observable<CartaoCredito> {
+      novoCartao.id  = null;
       const payload = {
-        ...novoBanco,
+        ...novoCartao,
       };
 
-      return this.http.post<Banco>(this.apiUrl, payload).pipe(
+      return this.http.post<CartaoCredito>(this.apiUrl, payload).pipe(
         catchError(this.handleError), // Captura o erro aqui
       );
     }
 
-    alterarBanco(upBanco: Banco){
+    alterarCartao(upCartao: CartaoCredito){
         const payload = {
-          ...upBanco,
+          ...upCartao,
         };
-        return this.http.patch<Banco>(this.apiUrl+'/'+payload.id, payload).pipe(
+        return this.http.patch<CartaoCredito>(this.apiUrl+'/'+payload.id, payload).pipe(
           catchError(this.handleError)
         );
       }
@@ -57,3 +57,4 @@ export class BancoService {
       );
     }
 }
+
